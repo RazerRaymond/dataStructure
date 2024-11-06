@@ -110,7 +110,7 @@ class AVLTree:
         def _print_helper(node):
             if node is None:
                 return
-            print(node.val, end=" | ")
+            print(node.val, end=" || ")
             _print_helper(node.left)
             _print_helper(node.right)
         _print_helper(self.root)

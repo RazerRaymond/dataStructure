@@ -57,90 +57,70 @@ class AVLTreeChat:
     # Insert function
     def insert(self, key):
         def _insert(node, key):
-            # Base case: If the node is null, create a new node
             if node is None:
                 return AVLTreeNode(key)
 
-            # Recursive case: Insert in the left or right subtree
             if key < node.val:
                 node.left = _insert(node.left, key)
             else:
                 node.right = _insert(node.right, key)
 
-            # Update height of this ancestor node
             self._update_height(node)
 
-            # Get the balance factor to check if the node is unbalanced
             balance = self._balance_factor(node)
 
-            # Left Left Case
             if balance > 1 and key < node.left.val:
                 return self._rotate_right(node)
 
-            # Right Right Case
             if balance < -1 and key > node.right.val:
                 return self._rotate_left(node)
 
-            # Left Right Case
             if balance > 1 and key > node.left.val:
                 node.left = self._rotate_left(node.left)
                 return self._rotate_right(node)
 
-            # Right Left Case
             if balance < -1 and key < node.right.val:
                 node.right = self._rotate_right(node.right)
                 return self._rotate_left(node)
 
-            # Return the unchanged node pointer
             return node
 
-        # Call the recursive insert helper
         self.root = _insert(self.root, key)
 
     # Delete function
     def delete(self, key):
         def _delete(node, key):
-            # Base case: if the node is not present
             if node is None:
                 return node
 
-            # Recursive case: Traverse to find the node
             if key < node.val:
                 node.left = _delete(node.left, key)
             elif key > node.val:
                 node.right = _delete(node.right, key)
             else:
-                # Node with only one child or no child
                 if node.left is None:
                     return node.right
                 elif node.right is None:
                     return node.left
 
-                # Node with two children: get the in-order successor
                 temp = self._get_min_value_node(node.right)
                 node.val = temp.val
                 node.right = _delete(node.right, temp.val)
 
-            # Update the height of the current node
             self._update_height(node)
 
-            # Get the balance factor to check if the node is unbalanced
             balance = self._balance_factor(node)
 
-            # Left Left Case
             if balance > 1 and self._balance_factor(node.left) >= 0:
                 return self._rotate_right(node)
 
-            # Left Right Case
             if balance > 1 and self._balance_factor(node.left) < 0:
                 node.left = self._rotate_left(node.left)
                 return self._rotate_right(node)
 
-            # Right Right Case
             if balance < -1 and self._balance_factor(node.right) <= 0:
                 return self._rotate_left(node)
 
-            # Right Left Case
             if balance < -1 and self._balance_factor(node.right) > 0:
                 node.right = self._rotate_right(node.right)
                 return self._rotate_left(node)
@@ -149,7 +129,6 @@ class AVLTreeChat:
 
         self.root = _delete(self.root, key)
 
-    # Helper function to find the node with the minimum value
     def _get_min_value_node(self, node):
         current = node
         while current.left is not None:
